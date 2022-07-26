@@ -1,6 +1,7 @@
 package mtree.tests.monitor;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 
 import mtree.Data;
 import mtree.MTreeClass;
@@ -38,6 +39,27 @@ public class QueryTest {
         }
     }
 
+    public void randomGenerate(int dimensions, int dbNum, int qNum)
+    {
+        Random r = new Random();
+        for(int count=0;count<dbNum+qNum;count++)
+        {
+            double[] values = new double[dimensions];
+            for(int i=0;i<dimensions;i++)
+            {
+                values[i] = r.nextDouble()*100;
+            }
+            Data data = new Data(values);
+            if(count<qNum)
+            {
+                queries.add(data);
+            }else
+            {
+                db.add(data);
+                mtree.add(data);
+            }
+        }
+    }
 
     // 检查遍历查找和索引查找的结果是否相同
     public void check() {
@@ -51,7 +73,7 @@ public class QueryTest {
             for(Data dbdata: db)
             {
                 double distance = Math.sqrt(Math.pow((qdata.getVales()[0]-dbdata.getVales()[0]),2)+Math.pow((qdata.getVales()[1]-dbdata.getVales()[1]),2));
-				if(distance-qdata.radius<0.0001)
+				if(distance-qdata.radius-dbdata.radius<0.0001)
                 {
                     resCount += 1;
                 }
@@ -78,6 +100,7 @@ public class QueryTest {
 
     public static void main(String[] args) {
 		QueryTest test = new QueryTest();
+        // test.randomGenerate(2, 100, 1000);
         test.establish(1000, 4000);
         test.check();
     }

@@ -11,7 +11,6 @@ import java.util.Set;
 
 import mtree.SplitFunction.SplitResult;
 
-
 /**
  * The main class that implements the M-Tree.
  *
@@ -19,7 +18,7 @@ import mtree.SplitFunction.SplitResult;
  *        this type are stored in HashMaps and HashSets, so their
  *        {@code hashCode()} and {@code equals()} methods must be consistent.
  */
-public class MTree<Data> {
+public class MTree {
 
 	/**
 	 * The type of the results for nearest-neighbor queries.
@@ -305,18 +304,6 @@ public class MTree<Data> {
 		return getNearest(queryData, range, Integer.MAX_VALUE);
 	}
 	
-	
-	/**
-	 * Performs a nearest-neighbors query on the M-Tree, constrained by the
-	 * number of neighbors.
-	 * @param queryData The query Data object.
-	 * @param limit     The maximum number of neighbors to fetch.
-	 * @return A {@link Query} object used to iterate on the results.
-	 */
-	public Query getNearestByLimit(Data queryData, int limit) {
-		return getNearest(queryData, Double.POSITIVE_INFINITY, limit);
-	}
-
 	/**
 	 * Performs a nearest-neighbor query on the M-Tree, constrained by distance
 	 * and/or the number of neighbors.
@@ -339,13 +326,11 @@ public class MTree<Data> {
 		return new Query(queryData, Double.POSITIVE_INFINITY, Integer.MAX_VALUE);
 	}
 	
-	
 	protected void _check() {
 		if(root != null) {
 			root._check();
 		}
 	}
-	
 
 	private class IndexItem {
 		Data Data;
@@ -354,7 +339,7 @@ public class MTree<Data> {
 
 		private IndexItem(Data Data) {
 			this.Data = Data;
-			this.radius = 0;
+			this.radius = Data.radius;
 			this.distanceToParent = -1;
 		}
 
@@ -374,8 +359,6 @@ public class MTree<Data> {
 			assert distanceToParent >= 0;
 		}
 	}
-
-	
 	
 	public abstract class Node extends IndexItem {
 
@@ -517,13 +500,10 @@ public class MTree<Data> {
 			rootness._checkDistanceToParent();
 		}
 
-		private MTree<Data> mtree() {
+		private MTree mtree() {
 			return MTree.this;
 		}
 	}
-	
-	
-	
 	
 	private abstract class NodeTrait {
 		protected Node thisNode;
@@ -531,10 +511,10 @@ public class MTree<Data> {
 	
 	private interface Leafness<Data> {
 		void doAddData(Data Data, double distance);
-		void addChild(MTree<Data>.IndexItem child, double distance);
+		void addChild(MTree.IndexItem child, double distance);
 		void doRemoveData(Data Data, double distance) throws DataNotFound;
-		MTree<Data>.Node newSplitNodeReplacement(Data Data);
-		void _checkChildClass(MTree<Data>.IndexItem child);
+		MTree.Node newSplitNodeReplacement(Data Data);
+		void _checkChildClass(MTree.IndexItem child);
 	}
 	
 	private interface Rootness {
@@ -542,8 +522,6 @@ public class MTree<Data> {
 		void _checkDistanceToParent();
 		void _checkMinCapacity();
 	}
-	
-	
 	
 	private class RootNodeTrait extends NodeTrait implements Rootness {
 		
@@ -564,7 +542,6 @@ public class MTree<Data> {
 		
 	};
 
-
 	private class NonRootNodeTrait extends NodeTrait implements Rootness {
 		
 		@Override
@@ -582,7 +559,6 @@ public class MTree<Data> {
 			assert thisNode.distanceToParent >= 0;
 		}
 	};
-	
 	
 	private class LeafNodeTrait extends NodeTrait implements Leafness<Data> {
 		
@@ -617,7 +593,6 @@ public class MTree<Data> {
 			assert child instanceof MTree.Entry;
 		}
 	}
-
 
 	class NonLeafNodeTrait extends NodeTrait implements Leafness<Data> {
 		
@@ -826,7 +801,6 @@ public class MTree<Data> {
 		}
 	}
 
-
 	private class RootLeafNode extends Node {
 		
 		private RootLeafNode(Data Data) {
@@ -894,13 +868,11 @@ public class MTree<Data> {
 		}
 	}
 
-
 	private class InternalNode extends Node {
 		private InternalNode(Data Data) {
 			super(Data, new NonRootNodeTrait(), new NonLeafNodeTrait());
 		}
 	};
-
 
 	private class LeafNode extends Node {
 
@@ -908,7 +880,6 @@ public class MTree<Data> {
 			super(Data, new NonRootNodeTrait(), new LeafNodeTrait());
 		}
 	}
-
 
 	private class Entry extends IndexItem {
 		private Entry(Data Data) {

@@ -4,7 +4,7 @@ import java.util.Set;
 
 import mtree.utils.Pair;
 
-public class MTreeClass extends MTree<Data> {
+public class MTreeClass extends MTree {
 	
 	private static final PromotionFunction<Data> nonRandomPromotion = new PromotionFunction<Data>() {
 		@Override
@@ -26,7 +26,7 @@ public class MTreeClass extends MTree<Data> {
 
 	
 	public MTreeClass() {
-		super(100, DistanceFunctions.EUCLIDEAN, 
+		super(300, DistanceFunctions.EUCLIDEAN, 
 			new ComposedSplitFunction<Data>(
 				nonRandomPromotion,
 				new PartitionFunctions.BalancedPartition<Data>()
