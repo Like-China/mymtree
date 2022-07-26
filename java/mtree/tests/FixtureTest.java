@@ -39,7 +39,7 @@ public class FixtureTest {
 			// 1. index matching
 			long t1 = System.currentTimeMillis();
 			MTreeClass.Query query = mtree.getNearestByRange(action.queryData, action.radius);
-			indexResCount += query.rangeQuery();
+			indexResCount += query.rangeQuery().size();
 			long t2 = System.currentTimeMillis();
 			indexTimeCost += (t2-t1);
 

@@ -106,12 +106,11 @@ public class MTree {
 
 		private PriorityQueue<ItemWithDistances<Node>> pendingQueue = new PriorityQueue<ItemWithDistances<Node>>();
 		private List<ResultItem> rangeRes = new ArrayList<>();
-		private int count= 0;
 
-		public int rangeQuery()
+		public List<ResultItem> rangeQuery()
 		{
 			if(MTree.this.root == null) {
-				return count;
+				return rangeRes;
 			}
 			double distance = MTree.this.distanceFunction.calculate(Query.this.Data, MTree.this.root.Data);
 			double minDistance = Math.max(distance - MTree.this.root.radius, 0.0);
@@ -131,7 +130,6 @@ public class MTree {
 							if(child instanceof MTree.Entry) {
 								Entry entry = (Entry)child;
 								rangeRes.add(new ResultItem(entry.Data, childDistance));
-								count ++;
 							} else {
 								Node childNode = (Node)child;
 								pendingQueue.add(new ItemWithDistances<Node>(childNode, childDistance, childMinDistance));
@@ -141,7 +139,7 @@ public class MTree {
 				}
 				
 			}
-			return count;
+			return rangeRes;
 		}
 			
 

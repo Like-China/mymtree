@@ -1,4 +1,5 @@
 package mtree;
+import java.util.Arrays;
 import java.util.Random;
 
 import mtree.DistanceFunctions.EuclideanCoordinate;
@@ -17,7 +18,7 @@ public class Data implements EuclideanCoordinate, Comparable<Data>{
     public Data(double... values)
     {
 		this.values = values;
-		this.radius = r.nextDouble()*10;
+		this.radius = Math.abs(r.nextDouble()*10);
 
         int hashCode = 1;
 		for(double value : values) {
@@ -119,5 +120,10 @@ public class Data implements EuclideanCoordinate, Comparable<Data>{
 		return 0;
 	}
 
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return Arrays.toString(values)+ " raidus: "+radius +" a:  "+bead.a+" b: "+bead.b;
+	}
 
 }
