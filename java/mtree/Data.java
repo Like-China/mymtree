@@ -10,11 +10,13 @@ import mtree.tests.monitor.Ellipse;
  */
 public class Data implements EuclideanCoordinate, Comparable<Data>{
     
-    public Ellipse bead;
+    public Ellipse bead = null;
     public double[] values;
     public double radius;
     private final int hashCode;
 	private Random r = new Random();
+	public boolean isQuery = false;
+
     public Data(double... values)
     {
 		this.values = values;

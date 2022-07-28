@@ -1,5 +1,7 @@
 package mtree.tests.monitor;
 
+import java.util.Arrays;
+
 /*
  * 椭圆类
  * 包含了移动物体在两个连续位置点的最大移动范围
@@ -38,7 +40,7 @@ public class Ellipse {
     public double getSpeed()
     {
         double dist = betweenDist();
-        return dist/(nextLocation.timestamp-curLocation.timestamp);
+        return dist/Settings.sr;
     }
 
     // 计算椭圆两个位置点之间的距离,单位为m
@@ -53,16 +55,22 @@ public class Ellipse {
         center[0] = (curLocation.x+nextLocation.x)/2;
         center[1] = (curLocation.y+nextLocation.y)/2;
         // 获取最大速度
-        double meanSpeed = getSpeed();
+        meanSpeed = getSpeed();
         if(maxSpeed < meanSpeed)
         {
             this.maxSpeed = meanSpeed;
         }
         // 计算a,b
-        a = maxSpeed*(nextLocation.timestamp-curLocation.timestamp)/2;
+        a = maxSpeed*(Settings.sr)/2;
         b = Math.sqrt(a*a-(Math.pow(curLocation.x-nextLocation.x,2)+Math.pow(curLocation.y-nextLocation.y,2))/4);
         assert a>0;
         assert b>0;
         
+    }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return curLocation.toString()+"->\n"+nextLocation.toString()+"\nCenter: "+Arrays.toString(center)+" meanSpeed: "+meanSpeed+" maxSpeed: "+maxSpeed;
     }
 }
